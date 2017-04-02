@@ -1,53 +1,74 @@
 'use strict'
-//Dependencias
+// Dependencies
 const path = require('path');
 const express = require('express')
 const logger = require('morgan')
 const bodyParser = require('body-parser')
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 80
 
-//Sets
+// Set paths
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.resolve(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
-// "Base de datos"
-var entradas = []
-app.locals.entradas = entradas;
+// Load message history from json
+var messages = []
 
-//Middlewares
+require('fs').readFile('arraylog.json', 'utf8', function(err, data){
+    if (err){
+        console.log(err);
+    } else {
+    var arraylog = JSON.parse(data); //json -> object
+	for (var message in (arraylog)){
+          messages.push(arraylog[message])
+        }
+    }
+})
+app.locals.messages = messages //persistant
+
+// Middleware
 app.use(logger('dev'))
-
 app.use(bodyParser.urlencoded({ extended: false}))
 
-//Rutas
+// Routes
 app.get('/', (req, res) => {
   res.render('index')
 })
 
-app.get('/nueva-entrada', (req, res) => {
-  res.render('nueva-entrada')
+app.get('/add', (req, res) => {
+  res.render('add')
 })
 
-app.post('/nueva-entrada', (req, res) => {
-  if (!req.body.titulo || !req.body.cuerpo) {
-    res.status(400).send('Las entradas deberían tener título y cuerpo.')
+app.post('/add', (req, res) => {
+  if (!req.body.name || !req.body.message) {
+    res.status(400).send('Enter a message and your name :)')
   }
-  entradas.unshift({
-    "titulo": req.body.titulo,
-    "cuerpo": req.body.cuerpo,
-    "publicado": new Date(),
+  // Add new message to persistant and json history
+  messages.unshift({
+    "name": req.body.name,
+    "message": req.body.message,
+    "saved": new Date().toISOString().substring(0,16),
   })
+  require('fs').writeFile(
+    './arraylog.json',
+    JSON.stringify(messages), //object -> json
+    function (err) {
+        if (err) {
+            console.error('File Write Error');
+        }
+    }
+  );
   res.redirect('/')
 })
 
-//Definiendo error 404
+// Error 404
 app.use( (req, res) => {
   res.status(404).render('404')
 })
 
-//Arrancando el servidor
+// Start server
 app.listen(port,() => {
-  console.log(`Aplicación corriendo en http://localhost:${port}`);
+  console.log(`Listening on http://localhost:${port}`);
 })

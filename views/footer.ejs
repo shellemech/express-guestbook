@@ -1,2 +1,17 @@
+      <script>
+      var fontArray = ["'Lobster', cursive","'Shadows Into Light', cursive", "'Nova Oval', cursive", "'Satisfy', cursive", "'Permanent Marker', cursive", "'Alice', serif"]
+      var selectFont = fontArray[Math.floor(Math.random()*fontArray.length)]
+      var pees = document.querySelectorAll('p')
+      var i
+      for (i = 0; i < pees.length; ++i) {
+        selectFont = fontArray[Math.floor(Math.random()*fontArray.length)]
+        pees[i].style.fontFamily = selectFont
+      }
+    </script>
+
+
   </body>
+<div>
+    <p class="pull-right"><a href="https://github.com/shellemech/express-guestbook">github.com/shellemech/express-guestbook</a></p>
+</div>
 </html>

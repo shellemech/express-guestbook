@@ -1,9 +1,9 @@
-#Express Guestbook
+#Leaving Card
 
-Guesbook escrito en Node.js con el framework Express funcional con 
-persistencia de datos en memoria.
+A simple message guestbook type thing adapted from express-guestbook.
+Written in Node.js with Express.
 
-## Instalación y Ejecución
+## Installation
 
 ```sh
 $ npm install

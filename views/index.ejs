@@ -1,19 +1,23 @@
 <% include header %>
-<% if(entradas.length) { %>
-  <% entradas.forEach(function(entrada) { %>
+<div class="row" style="display: flex; flex-wrap: wrap;">
+<% if(messages.length) { %>
+  <% messages.forEach(function(msg) { %>
+  <div class="col-md-4">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="text-muted pull-right">
-            <%= entrada.publicado %>
-        </div>
-        <%= entrada.titulo %>
-      </div>
       <div class="panel-body">
-        <%= entrada.cuerpo %>
+        <p><%= msg.message %></p>
+      </div>
+      <div class="panel-footer">
+        <div class="text-muted pull-right">
+            <%= msg.saved %>
+        </div>
+        <%= msg.name %>
       </div>
     </div>
+  </div>
   <% }) %>
   <%} else { %>
-    No hay entradas! <a href="/nueva-entrada">Agrega una!</a>
+    No messages yet, <a href="/add">add one!</a>
   <% } %>
+</div>
 <% include footer %>
